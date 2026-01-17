@@ -72,19 +72,48 @@ data_list <- list("Damen" = damen, "A bis B" = a_b, "Offene Klasse" = offen)
 write_xlsx(data_list, path = paste0(here::here("results", paste0(Jahr)), "/GW_Ergebnisse_", Jahr,".xlsx"))
 
 # create overview map
-map1<-leaflet(data = res_dat) %>%
-  addProviderTiles(providers$Esri.WorldImagery) %>%  # Use Esri Satellite Imagery
-  addMarkers(
-    ~long, ~lat, popup = ~paste(Vorname, Familienname, "|" ,Hersteller, Typ, "|", Distanz, "km"), label = ~paste(Vorname, Familienname, "|" ,Hersteller, Typ, "|", Distanz, "km")
+# map1<-leaflet(data = res_dat) %>%
+#   addProviderTiles(providers$Esri.WorldImagery) %>%  # Use Esri Satellite Imagery
+#   addMarkers(
+#     ~long, ~lat, popup = ~paste(Vorname, Familienname, "|" ,Hersteller, Typ, "|", Distanz, "km"), label = ~paste(Vorname, Familienname, "|" ,Hersteller, Typ, "|", Distanz, "km")
+#   ) %>%
+#   addCircleMarkers(
+#     ~14.243345, ~47.18117,
+#     color = "black", fillColor = "red", fillOpacity = 1,
+#     radius = 10,  # Distinctly larger marker
+#     popup = ~paste("Start"),
+#     label = ~paste("Start"),
+#   ) %>%
+#   setView(lng = mean(c(res_dat$long, 14.243345)), lat = mean(c(res_dat$lat, 47.18117)), zoom = 14)
+
+
+map1 <- leaflet(data = res_dat) %>%
+  addProviderTiles(providers$Esri.WorldImagery) %>%
+  
+  addAwesomeMarkers(
+    lng = ~long, lat = ~lat,
+    icon = awesomeIcons(
+      icon = 'user', library = 'fa',
+      markerColor = 'blue', iconColor = 'white'
+    ),
+    popup = paste0("<b>", res_dat$Vorname, " ", res_dat$Familienname, "</b><br>",
+                   res_dat$Hersteller, " ", res_dat$Typ, "<br>",
+                   "Distanz: ", res_dat$Distanz, " km")
   ) %>%
+  
   addCircleMarkers(
-    ~14.243345, ~47.18117,
+    lng = 14.243345, lat = 47.18117,
     color = "black", fillColor = "red", fillOpacity = 1,
-    radius = 10,  # Distinctly larger marker
-    popup = ~paste("Start"),
-    label = ~paste("Start"),
+    radius = 15,
+    popup = "<b>Startpunkt</b>"
   ) %>%
-  setView(lng = mean(c(res_dat$long, 14.243345)), lat = mean(c(res_dat$lat, 47.18117)), zoom = 14)
+  
+  fitBounds(
+    lng1 = min(c(res_dat$long, 14.243345)),
+    lat1 = min(c(res_dat$lat, 47.18117)),
+    lng2 = max(c(res_dat$long, 14.243345)),
+    lat2 = max(c(res_dat$lat, 47.18117))
+  )
 
 
 map1
@@ -105,4 +134,3 @@ saveWidget(map1, file = paste0(here::here(), "/index.html"), selfcontained = TRU
 #   file =  paste0(here::here("results"), "/GW_Map_", Jahr,".png"),
 #   selfcontained = FALSE
 # )
-
