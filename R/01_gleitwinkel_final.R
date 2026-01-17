@@ -8,7 +8,7 @@ library(htmlwidgets)
 
 
 # parameter
-Jahr <- 2025
+Jahr <- 2026
 
 
 # define eichberg start
@@ -54,7 +54,7 @@ offen<-res_dat %>%
   select(Platzierung, Vorname, Familienname, Distanz, Hersteller, Typ)
 
 
-output_path <- paste0(here::here("results"), "/GW_Ergebnisse_", Jahr, ".xlsx")
+output_path <- paste0(here::here("results", paste0(Jahr)), "/GW_Ergebnisse_", Jahr, ".xlsx")
 
 # Check if the file exists and remove it if it does
 if (file.exists(output_path)) {
@@ -67,7 +67,7 @@ if (file.exists(output_path)) {
 
 # combine and export results
 data_list <- list("Damen" = damen, "A bis B" = a_b, "Offene Klasse" = offen)
-write_xlsx(data_list, path = paste0(here::here("results"), "/GW_Ergebnisse_", Jahr,".xlsx"))
+write_xlsx(data_list, path = paste0(here::here("results", paste0(Jahr)), "/GW_Ergebnisse_", Jahr,".xlsx"))
 
 # create overview map
 map1<-leaflet(data = res_dat) %>%
@@ -88,7 +88,11 @@ map1<-leaflet(data = res_dat) %>%
 map1
 
 # Save the map to an HTML file
-saveWidget(map1, file = paste0(here::here("results"), "/GW_Map_", Jahr,".html"), selfcontained = TRUE)
+saveWidget(map1, file = paste0(here::here("results", paste0(Jahr)), "/GW_Map_", Jahr,".html"), selfcontained = TRUE)
+
+
+# Save the map to an HTML file
+saveWidget(map1, file = paste0(here::here("results"), "/index.html"), selfcontained = TRUE)
 
 # # create jpg of the map
 # mapshot(
