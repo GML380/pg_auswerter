@@ -5,6 +5,8 @@ library(tidyverse)
 library(writexl)
 library(leaflet)
 library(htmlwidgets)
+library(leaflet)
+library(leaflet.extras)  # Für Marker Clustering
 
 
 # parameter
@@ -91,8 +93,11 @@ map1
 saveWidget(map1, file = paste0(here::here("results", paste0(Jahr)), "/GW_Map_", Jahr,".html"), selfcontained = TRUE)
 
 
-# Save the map to an HTML file
-saveWidget(map1, file = paste0(here::here("results"), "/index.html"), selfcontained = TRUE)
+# Save the map to an HTML file - for tighub
+if (file.exists(paste0(here::here(), "/index.html"))) {
+  file.remove(paste0(here::here(), "/index.html"))
+}
+saveWidget(map1, file = paste0(here::here(), "/index.html"), selfcontained = TRUE)
 
 # # create jpg of the map
 # mapshot(
@@ -100,6 +105,4 @@ saveWidget(map1, file = paste0(here::here("results"), "/index.html"), selfcontai
 #   file =  paste0(here::here("results"), "/GW_Map_", Jahr,".png"),
 #   selfcontained = FALSE
 # )
-
-
 
